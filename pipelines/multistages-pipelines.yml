@@ -17,7 +17,7 @@ variables:
 
 stages:
 - stage : 'Build' 
-  displayName:  'Génération et push de l'image'
+  displayName:  'Génération et push image'
  pool:
     vmImage: 'ubuntu-latest'
   jobs:

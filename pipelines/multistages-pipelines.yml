@@ -18,7 +18,7 @@ variables:
 stages:
 - stage : 'Build' 
   displayName:  'Génération et push image'
- pool:
+  pool:
     vmImage: 'ubuntu-latest'
   jobs:
     - job : 'Build'
@@ -31,6 +31,7 @@ stages:
           Dockerfile: '$(dockerfilePath)'
           tags: |
            '$(tag)'
+        displayName: 'Génération et push image dans registre de conteneurs'
 
 - stage : 'DeployToDev' 
   displayName:  'Déploiment en Dev'
@@ -49,3 +50,4 @@ stages:
                azureSubscription: '$(serviceConnection)'
                appName: '$(appName)'
                containers: '$(containerRegistry)/$(imageRepository):$(tag)'
+             displayName: 'Déploiement sur Azure Web App For Container'

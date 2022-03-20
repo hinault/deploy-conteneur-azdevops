@@ -7,51 +7,30 @@ trigger:
 - none
 
 variables:
-  buildConfiguration: 'Release'
   serviceConnection : 'az-serviceprincipal'
+  appName: 'testconteneurCr'
+  containerRegistry: 'azcrcours12'
+  acrServiceConnection : 'az-acr-sc'
+  imageRepository: 'democours'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
 
 stages:
 - stage : 'Build' 
-  displayName:  'Build, execution des tests et publication'
+  displayName:  'Génération et push image'
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
     - job : 'Build'
       steps:
-      - task: DotNetCoreCLI@2
+      - task: Docker@2
         inputs:
-         command: 'restore'
-         projects: '**/*.csproj'
-         feedsToUse: 'select'
-        displayName: 'restaurer les packages'
+          containerRegistry: 'az-acr-sc'
+          repository: '$(imageRepository)'
+          command: 'buildAndPush'
+          Dockerfile: '$(dockerfilePath)'
+        displayName: 'Génération et push image dans registre de conteneurs'
 
-      - task: DotNetCoreCLI@2
-        inputs:
-         command: 'build'
-         projects: '**/*.csproj'
-         arguments: '--configuration $(buildConfiguration)'
-        displayName: 'Génération de la solution'
-
-      - task: DotNetCoreCLI@2
-        inputs:
-         command: 'test'
-         projects: '**/*Tests.csproj'
-         arguments: '--configuration $(buildConfiguration)'
-        displayName: 'Exécution des tests unitaires'
-     
-      - task: DotNetCoreCLI@2
-        inputs:
-         command: 'publish'
-         publishWebProjects: true
-         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        displayName: 'Génération du package de publication'
-      - task: PublishBuildArtifacts@1
-        inputs:
-         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-         ArtifactName: 'drop'
-         publishLocation: 'Container'
-        displayName: 'Publication du package dans Azure DevOps'
-        
 - stage : 'DeployToDev' 
   displayName:  'Déploiment en Dev'
   pool:
@@ -64,18 +43,9 @@ stages:
         runOnce:
          deploy:
            steps:
-           - task: DownloadBuildArtifacts@0
+           - task: AzureWebAppContainer@1
              inputs:
-               buildType: 'current'
-               downloadType: 'single'
-               artifactName: 'drop'
-               downloadPath: '$(System.ArtifactsDirectory)'
-             displayName: 'Téléchargement du package'
-           - task: AzureRmWebAppDeployment@4
-             inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: '$(serviceConnection)'
-              appType: 'webApp'
-              WebAppName: 'webapp-h22-dev-121'
-              package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-             displayName: 'déploiment de application'
+               azureSubscription: '$(serviceConnection)'
+               appName: '$(appName)'
+               containers: '$(containerRegistry)/$(imageRepository):$(tag)'
+             displayName: 'Déploiement sur Azure Web App For Container'

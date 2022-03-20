@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["../src/TestApp.MVC/TestApp.MVC.csproj", "src/TestApp.MVC/"]
-COPY ["../src/TestApp.ApplicationCore/TestApp.ApplicationCore.csproj", "src/TestApp.ApplicationCore/"]
-COPY ["../src/TestApp.Infrastructure/TestApp.Infrastructure.csproj", "src/TestApp.Infrastructure/"]
-COPY ["../tests/TestApp.MVC.UnitTests/TestApp.MVC.UnitTests.csproj", "tests/TestApp.MVC.UnitTests/"]
+COPY ["/src/TestApp.MVC/TestApp.MVC.csproj", "src/TestApp.MVC/"]
+COPY ["/src/TestApp.ApplicationCore/TestApp.ApplicationCore.csproj", "src/TestApp.ApplicationCore/"]
+COPY ["/src/TestApp.Infrastructure/TestApp.Infrastructure.csproj", "src/TestApp.Infrastructure/"]
+COPY ["/tests/TestApp.MVC.UnitTests/TestApp.MVC.UnitTests.csproj", "tests/TestApp.MVC.UnitTests/"]
 RUN dotnet restore "src/TestApp.MVC/TestApp.MVC.csproj"
 RUN dotnet restore "tests/TestApp.MVC.UnitTests/TestApp.MVC.UnitTests.csproj"
 COPY . .

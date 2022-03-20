@@ -29,6 +29,7 @@ stages:
           repository: '$(imageRepository)'
           command: 'buildAndPush'
           Dockerfile: '$(dockerfilePath)'
+          buildContext: '$(Build.SourcesDirectory)'
         displayName: 'Génération et push image dans registre de conteneurs'
 
 - stage : 'DeployToDev' 

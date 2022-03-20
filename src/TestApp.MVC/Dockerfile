@@ -14,14 +14,11 @@ COPY ["/tests/TestApp.MVC.UnitTests/TestApp.MVC.UnitTests.csproj", "tests/TestAp
 RUN dotnet restore "src/TestApp.MVC/TestApp.MVC.csproj"
 RUN dotnet restore "tests/TestApp.MVC.UnitTests/TestApp.MVC.UnitTests.csproj"
 COPY . .
-WORKDIR "/src/src/TestApp.MVC"
-RUN dotnet build "TestApp.MVC.csproj" -c Release -o /app/build
-
 WORKDIR "/src/tests/TestApp.MVC.UnitTests"
 RUN dotnet build "TestApp.MVC.UnitTests.csproj" -c Release -o /app/build
-
 RUN dotnet test "TestApp.MVC.UnitTests.csproj" --logger "trx;LogFileName=TestApp.MVC.trx"
-
+WORKDIR "/src/src/TestApp.MVC"
+RUN dotnet build "TestApp.MVC.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "TestApp.MVC.csproj" -c Release -o /app/publish
 

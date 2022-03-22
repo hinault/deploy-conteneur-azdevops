@@ -9,7 +9,7 @@ trigger:
 variables:
   serviceConnection : 'az-serviceprincipal'
   appName: 'testconteneurCr'
-  containerRegistry: 'azcrcours12'
+  containerRegistry: 'azcrcours12.azurecr.io'
   acrServiceConnection : 'az-acr-sc'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'

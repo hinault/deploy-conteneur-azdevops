@@ -8,7 +8,7 @@ trigger:
 
 variables:
   serviceConnection : 'az-serviceprincipal'
-  appName: 'tesu345'
+  appName: 'testconteneurCr'
   containerRegistry: 'azcrcours12'
   acrServiceConnection : 'az-acr-sc'
   imageRepository: 'democours'

@@ -46,7 +46,7 @@ stages:
            steps:
            - task: AzureWebAppContainer@1
              inputs:
-               azureSubscription: '$(serviceConnection)'
+               azureSubscription: 'az-acr-sc'
                appName: '$(appName)'
                containers: '$(containerRegistry)/$(imageRepository):$(tag)'
              displayName: 'Déploiement sur Azure Web App For Container'

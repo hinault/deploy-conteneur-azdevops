@@ -8,7 +8,7 @@ trigger:
 
 variables:
   serviceConnection : 'az-serviceprincipal'
-  appName: 'testconteneurCr'
+  appName: 'test5651'
   containerRegistry: 'azcrcours12.azurecr.io'
   acrServiceConnection : 'az-acr-sc'
   imageRepository: 'democours'
@@ -25,7 +25,7 @@ stages:
       steps:
       - task: Docker@2
         inputs:
-          containerRegistry: 'az-acr-sc'
+          containerRegistry: '$(acrServiceConnection)'
           repository: '$(imageRepository)'
           command: 'buildAndPush'
           Dockerfile: '$(dockerfilePath)'

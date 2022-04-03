@@ -15,6 +15,7 @@ builder.Services.AddScoped<IEtudiantsService, EtudiantsService>();
 builder.Services.AddDbContext<TestAppContext>(options =>
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHealthChecks();
 
 
 var app = builder.Build();
@@ -37,5 +38,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHealthChecks("/healthz");
 
 app.Run();

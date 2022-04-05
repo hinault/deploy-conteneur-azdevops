@@ -18,7 +18,6 @@ builder.Services.AddDbContext<TestAppContext>(options =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
-    options.InstanceName = "rediscache";
 });
 
 builder.Services.AddHealthChecks();

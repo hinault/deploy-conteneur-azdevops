@@ -15,7 +15,14 @@ builder.Services.AddScoped<IEtudiantsService, EtudiantsService>();
 builder.Services.AddDbContext<TestAppContext>(options =>
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
+    options.InstanceName = "rediscache";
+});
+
 builder.Services.AddHealthChecks();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
 
 
 var app = builder.Build();

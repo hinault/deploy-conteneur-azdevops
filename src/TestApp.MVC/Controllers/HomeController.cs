@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,42 @@ namespace TestApp.MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IDistributedCache _distributedCache;
+
+        public HomeController(ILogger<HomeController> logger, IDistributedCache distributedCache)
         {
             _logger = logger;
+
+            _distributedCache = distributedCache;
+        }
+
+        public async Task<IActionResult> CacheRedis()
+        {
+            string cacheDatetime = await _distributedCache.GetStringAsync("cacheDateTime");
+
+            if (cacheDatetime == null)
+            {
+                cacheDatetime = DateTime.Now.ToString();
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    SlidingExpiration = TimeSpan.FromSeconds(10),
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(120),
+                };
+
+                _ = _distributedCache.SetStringAsync("cacheDateTime", cacheDatetime, options);
+            }
+
+            ViewBag.CacheDatetime = cacheDatetime;  
+
+            return View();
+        }
+
+        public IActionResult GenererException()
+        {
+            throw new NotImplementedException();
+
+            return View();
         }
 
         public IActionResult Index()

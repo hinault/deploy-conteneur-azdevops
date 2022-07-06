@@ -15,12 +15,16 @@ builder.Services.AddScoped<IEtudiantsService, EtudiantsService>();
 builder.Services.AddDbContext<TestAppContext>(options =>
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Enregistrement de redis dans le conteneur d'IoC
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
 });
 
+//Enregistrement des HealthChecks
 builder.Services.AddHealthChecks();
+
+//Enregistrement d'Azure Application Insights dans le conteneur d'IoC
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
 
 

@@ -25,18 +25,21 @@ namespace TestApp.MVC.Controllers
 
         public async Task<IActionResult> CacheRedis()
         {
+            //Obtention des données du cache
             string cacheDatetime = await _distributedCache.GetStringAsync("cacheDateTime");
 
             if (cacheDatetime == null)
             {
                 cacheDatetime = DateTime.Now.ToString();
 
+                //Définition des options de configurations du stockage des données dans le cache
                 var options = new DistributedCacheEntryOptions
                 {
                     SlidingExpiration = TimeSpan.FromSeconds(10),
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(120),
                 };
 
+                //Ajout des données dans le cache
                 _ = _distributedCache.SetStringAsync("cacheDateTime", cacheDatetime, options);
             }
 

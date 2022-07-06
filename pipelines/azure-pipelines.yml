@@ -1,48 +1,52 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
 trigger:
-- none
-
-pool:
-  vmImage: ubuntu-latest
+- main
 
 variables:
-  buildConfiguration: 'Release'
+  serviceConnection : 'az-serviceprincipal'
+  appName: 'testconteneurCr'
+  containerRegistry: 'azcrcours12.azurecr.io'
+  acrServiceConnection : 'az-acr-sc'
+  imageRepository: 'democours'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
 
-steps:
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-    feedsToUse: 'select'
-  displayName: 'restaurer les packages'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'Génération de la solution'
+stages:
+- stage : 'Build' 
+  displayName:  'Génération et push image'
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+    - job : 'Build'
+      steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: '$(acrServiceConnection)'
+          repository: '$(imageRepository)'
+          command: 'buildAndPush'
+          Dockerfile: '$(dockerfilePath)'
+          buildContext: '$(Build.SourcesDirectory)'
+        displayName: 'Génération et push image dans registre de conteneurs'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: '**/*Tests.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'Exécution des tests unitaires'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-  displayName: 'Génération du package de publication'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-  displayName: 'Publication du package dans Azure DevOps'
+- stage : 'DeployToDev' 
+  displayName:  'Déploiment en Dev'
+  pool:
+    vmImage: 'ubuntu-latest'
+  dependsOn: 'Build'
+  jobs:
+    - deployment : 'DeployToDev'
+      environment: 'h22-developpement'
+      strategy:
+        runOnce:
+         deploy:
+           steps:
+           - task: AzureWebAppContainer@1
+             inputs:
+               azureSubscription: '$(serviceConnection)'
+               appName: '$(appName)'
+               containers: '$(containerRegistry)/$(imageRepository):$(tag)'
+             displayName: 'Déploiement sur Azure Web App For Container'

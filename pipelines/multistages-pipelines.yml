@@ -7,9 +7,9 @@ trigger:
 - main
 
 variables:
-  serviceConnection : 'az-serviceprincipal'
-  appName: 'testconteneurCr'
-  containerRegistry: 'azcrcours12.azurecr.io'
+  serviceConnection : 'sc-azure'
+  appName: 'azwebappconteneur'
+  containerRegistry: 'acrdemo110.azurecr.io'
   acrServiceConnection : 'az-acr-sc'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'

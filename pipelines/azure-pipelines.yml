@@ -7,10 +7,10 @@ trigger:
 - main
 
 variables:
-  serviceConnection : 'az-serviceprincipal'
-  appName: 'testconteneurCr'
-  containerRegistry: 'azcrcours12.azurecr.io'
-  acrServiceConnection : 'az-acr-sc'
+  serviceConnection : 'sc-azure'
+  appName: 'az-webapp-azdevops'
+  containerRegistry: 'acrdemo110.azurecr.io'
+  acrServiceConnection : 'sc-acr'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -32,6 +32,7 @@ stages:
           buildContext: '$(Build.SourcesDirectory)'
         displayName: 'Génération et push image dans registre de conteneurs'
 
+   
 - stage : 'DeployToDev' 
   displayName:  'Déploiment en Dev'
   pool:

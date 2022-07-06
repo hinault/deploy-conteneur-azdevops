@@ -10,7 +10,7 @@ variables:
   serviceConnection : 'sc-azure'
   appName: 'azwebappconteneur'
   containerRegistry: 'acrdemo110.azurecr.io'
-  acrServiceConnection : 'az-acr-sc'
+  acrServiceConnection : 'sc-registry'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'

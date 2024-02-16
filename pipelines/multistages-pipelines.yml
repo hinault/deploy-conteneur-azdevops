@@ -4,13 +4,13 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- none
 
 variables:
   serviceConnection : 'sc-azure'
   appName: 'azwebappconteneur'
-  containerRegistry: 'acrdemo110.azurecr.io'
-  acrServiceConnection : 'sc-registry'
+  containerRegistry: 'acrdemo120.azurecr.io'
+  acrServiceConnection : 'sc-container-registry'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'

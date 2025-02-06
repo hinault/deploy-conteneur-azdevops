@@ -8,8 +8,8 @@ trigger:
 
 variables:
   serviceConnection : 'sc-azure'
-  appName: 'az-webapp-azdevops'
-  containerRegistry: 'acrdemo110.azurecr.io'
+  appName: 'webdemodas'
+  containerRegistry: 'acrdemodas.azurecr.io'
   acrServiceConnection : 'sc-acr'
   imageRepository: 'democours'
   dockerfilePath: '**/Dockerfile'

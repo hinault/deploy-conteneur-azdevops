@@ -40,7 +40,7 @@ stages:
   dependsOn: 'Build'
   jobs:
     - deployment : 'DeployToDev'
-      environment: 'h22-developpement'
+      environment: 'Dev'
       strategy:
         runOnce:
          deploy:
